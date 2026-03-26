@@ -73,7 +73,7 @@ export default function RegisterPage() {
             if (err && typeof err === 'object') {
                 // Network error (backend not reachable)
                 if ('code' in err && err.code === 'ERR_NETWORK') {
-                    message = "Cannot connect to server. Please make sure the backend is running on http://localhost:8000";
+                    message = "Cannot connect to server. Please make sure the backend is running on http://localhost:8001";
                 }
                 // Axios error with response
                 else if ('response' in err) {

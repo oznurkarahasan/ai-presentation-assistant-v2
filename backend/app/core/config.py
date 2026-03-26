@@ -35,7 +35,13 @@ class Settings(BaseSettings):
 
     # CORS configuration
     CORS_ORIGINS: list[str] = Field(
-        default=["http://localhost:3000", "http://127.0.0.1:3000", "http://0.0.0.0:3000"],
+        default=[
+            "http://localhost:3000", 
+            "http://127.0.0.1:3000", 
+            "http://0.0.0.0:3000",
+            "http://localhost:3001",
+            "http://127.0.0.1:3001"
+        ],
         description="Allowed CORS origins. For .env, use JSON array format: [\"http://localhost:3000\"]"
     )
 
