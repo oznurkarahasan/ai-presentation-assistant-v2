@@ -227,7 +227,7 @@ export default function RealTimePresentationPage() {
         const connect = () => {
             const socketId = Math.random().toString(36).substring(7);
             const host = typeof window !== 'undefined' ? window.location.hostname : '127.0.0.1';
-            const baseWsUrl = process.env.NEXT_PUBLIC_WS_URL || `ws://${host}:8000`;
+            const baseWsUrl = process.env.NEXT_PUBLIC_WS_URL || `ws://${host}:8001`;
             const wsUrl = `${baseWsUrl}/api/v1/orchestration/ws/presentation/${presentationId}`;
 
             console.log(`[WebSocket] [${socketId}] Connecting to: ${wsUrl} (Current Host: ${host})`);

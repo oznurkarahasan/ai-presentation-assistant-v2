@@ -139,7 +139,7 @@ export default function UploadPage() {
 
                 // Show PPTX preview if conversion succeeded
                 if (response.data.pdf_preview_path) {
-                    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+                    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
                     setPptxPreviewUrl(`${apiBase}/${response.data.pdf_preview_path}#toolbar=0&navpanes=0&scrollbar=0`);
                 }
 

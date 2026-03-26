@@ -85,7 +85,7 @@ export default function PresentationViewer({
     }, [currentPage, onPageChange]);
 
     const getIframeSrc = () => {
-        const baseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/${fileUrl}`;
+        const baseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/${fileUrl}`;
         const fragments = `#page=${currentPage}&view=Fit&toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0`;
         return `${baseUrl}${fragments}`;
     };
