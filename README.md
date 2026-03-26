@@ -1,208 +1,118 @@
-# AI-Powered Presentation Assistant
+# 🎙️ AI-Powered Presentation Assistant (V2 - Isolated)
 
-An intelligent system that analyzes real-time speech during presentations to automatically navigate slides, powered by Edge AI logic and a modern web stack.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-## System Architecture
-
-This project utilizes a decoupled microservice architecture orchestrated via Docker Compose.
-
-| Service      | Technology            | Host Port (Local) | Container Port (Docker) | Description                                                    |
-| :----------- | :-------------------- | :---------------- | :---------------------- | :------------------------------------------------------------- |
-| **Backend**  | Python (FastAPI)      | `8000`            | `8000`                  | Handles AI logic, RAG pipeline, and WebSocket connections.     |
-| **Frontend** | Next.js (React)       | `3000`            | `3000`                  | User interface for uploading presentations and live mode.      |
-| **Database** | PostgreSQL + pgvector | `5435`            | `5432`                  | Stores user data and vector embeddings for AI semantic search. |
+An intelligent system that analyzes real-time speech during presentations to automatically navigate slides. This version (V2) is configured to run independently of other instances, ensuring an isolated development and execution environment.
 
 ---
 
-## Getting Started
+## 🏗️ System Architecture (V2)
 
-Follow these steps to set up the project on your local machine.
+The system is built on a modern, decoupled microservice architecture, optimized for real-time AI processing and semantic search.
 
-### Prerequisites
+| Service | Technology | Host Port (Local) | Container Port | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Backend** | Python (FastAPI) | `8001` | `8000` | AI logic, RAG pipeline, and WebSockets. |
+| **Frontend** | Next.js (React) | `3001` | `3000` | User dashboard, uploads, and live mode. |
+| **Database** | PostgreSQL + pgvector | `5436` | `5432` | Vector embeddings & Relational data. |
 
-- **Docker Desktop** (Must be installed and running)
-- **Git**
+---
 
-### 1. Clone the Repository
+## 🚀 Getting Started
+
+### 1. Repository Setup
+
+Clone the repository and prepare the environment configuration.
 
 ```bash
+# Clone the repository
 git clone https://github.com/oznurkarahasan/ai-presentation-assistant-v2.git
 cd ai-presentation-assistant
+
+# Create .env from template
+cp .env.example .env
 ```
 
-### 2. Configure Environment Variables
+### 2. Launch the System (V2)
 
-Create a .env file in the root directory by copying the example.
+> [!IMPORTANT]
+> Bu proje özel bir dosya ismi kullandığı için şu komutla başlatılmalıdır:
 
 ```bash
-Copy-Item .env.example .env
+docker-compose -f docker-compose.yml up -d --build
 ```
 
-Important: Open the .env file and fill in your OPENAI_API_KEY. The database credentials can remain as default for local development.
+---
 
-### 3. Start the System
+## 🔗 Access Points
 
-Run the following command to build and start all services:
+| Component | URL / Connection String |
+| :--- | :--- |
+| **Frontend UI** | [http://localhost:3001](http://localhost:3001) |
+| **Backend API** | [http://localhost:8001](http://localhost:8001) |
+| **API Documentation** | [http://localhost:8001/docs](http://localhost:8001/docs) |
+| **Database** | `localhost:5436` (User: `admin` / Pass: `admin`) |
 
-```bash
-docker-compose up --build
-```
+---
 
-Wait until you see the logs "Application startup complete" and "Ready in ... ms".
+## 🛠️ Development Workflow
 
-### 4. Local Development Setup (For Coding & IntelliSense)
+### Local Python Environment (Backend)
 
-To fix missing imports in VS Code and enable auto-completion:
-
-1.  **Navigate to backend:**
-    ```bash
-    cd backend
-    ```
-2.  **Create Virtual Environment:**
-    ```bash
-    python -m venv venv
-    ```
-3.  **Activate Environment:**
-    - **Windows:** `.\venv\Scripts\activate`
-    - **Mac/Linux:** `source venv/bin/activate`
-4.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-5.  **VS Code Configuration:**
-    - Press `Ctrl + Shift + P` -> `Python: Select Interpreter`
-    - Select the interpreter inside `./backend/venv/Scripts/python.exe`
-
-### 5. Access Points
-
-Once the system is running, you can access:
-
-    Frontend (UI): http://localhost:3000
-
-    Backend API: http://localhost:8000
-
-    API Documentation (Swagger): http://localhost:8000/docs
-
-    Database: Connect via any SQL client (DBeaver, TablePlus) using localhost:5432 (User/Pass: admin/admin).
-
-### 6. Development Workflow
-
-When should I run --build?
-Only if you modify:
-
-- backend/requirements.txt (Adding new Python libraries)
-- frontend/package.json (Adding new Node packages)
-- Dockerfile or docker-compose.yml
-
-Important: if you add new python libraries please dont forget to add to requirements.txt
+For local development, IntelliSense, and testing, set up a virtual environment:
 
 ```bash
 cd backend
-pip install new_library
-Add-Content requirements.txt "new_library"
-```
+python -m venv venv
 
-Command to rebuild:
-
-```bash
-docker-compose up --build
-```
-
-How to stop the project?
-
-Press Ctrl + C in the terminal, or run:
-
-```bash
-docker-compose down
-```
-
-### 7. Database Schema (PostgreSQL + pgvector)
-
-The system relies on a **9-Table Relational Structure** designed for data integrity, AI compatibility, and comprehensive audit logging.
-
-| Table Name                  | Description                           | Key Features                                                                      |
-| :-------------------------- | :------------------------------------ | :-------------------------------------------------------------------------------- |
-| **`users`**                 | Central identity table.               | Supports Age Analysis (`birth_date`). Root of all relations.                      |
-| **`user_preferences`**      | User-specific settings.               | Stores `ideal_presentation_time`, `language`. (1:1 Relation).                     |
-| **`presentations`**         | Metadata for uploaded files.          | Supports **Guest Mode** (`user_id` nullable). PDF/PPTX with file hash & security. |
-| **`slides`**                | The "Brain" of the RAG system.        | Stores **Vector Embeddings (1536 dim)** for AI semantic search via pgvector.      |
-| **`notes`**                 | User-specific slide notes.            | Strictly for registered users (`user_id` NOT null).                               |
-| **`presentation_analyses`** | AI-generated report card.             | JSON-based storage for flexible AI metrics and feedback.                          |
-| **`presentation_sessions`** | Performance logs.                     | Tracks `practice` vs `live` sessions, duration, and **real-time slide index**. |
-| **`activity_logs`**         | System-wide audit trail.              | Logs all user actions (upload, delete, login) for security and analytics.         |
-| **`verification_tokens`**   | Email verification & password resets. | Time-limited tokens for secure user authentication flows.                         |
-
-> **Security Note:** All relationships utilize `CASCADE DELETE`. If a user is deleted, all their data (slides, notes, sessions, logs) is automatically wiped to prevent orphan data.
-
-### Shortcuts
-
-- To access the database via Docker
-
-```bash
-docker exec -it presentation_db psql -U admin -d presentation_db
-```
-
-- To delete and reinstall in Docker
-
-```bash
-docker-compose down
-docker-compose up -d
-```
-
-- Docker commands
-
-```bash
-docker-compose up --build
-docker system prune -a --volumes
-docker compose build
-```
-
-- Pyhton virtual environment
-
-```bash
-cd backend
+# Windows Activation:
 .\venv\Scripts\activate
+
+# Mac/Linux Activation:
+# source venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
-## Commands for Linux Users
+### Useful V2 Commands
 
-- Builds images and starts all services in the background.
+| Action | Command |
+| :--- | :--- |
+| **Stop Project** | `docker-compose down` |
+| **View Logs** | `docker-compose logs -f` |
+| **Clean Reinstall** | `docker-compose down -v && docker-compose up -d --build` |
+
+### Database CLI Access
+
+Access the PostgreSQL instance directly via Docker:
 
 ```bash
-docker compose up -d --build
+docker exec -it presentation_db_v2 psql -U admin -d presentation_db_v2
 ```
-- Starts existing containers without rebuilding images.
-```bash
-docker compose up -d
-```
-- Stops and removes containers and the project network.
-```bash
-docker compose down
-```
-- watch logs
-```bash
-docker compose logs -f
-docker compose logs -f backend
-docker compose logs -f frontend
-```
-- only one service
-```bash
-docker compose up -d --build backend
-docker compose up -d --build frontend
-```
-- in container
-```bash
-docker compose exec backend bash
-docker compose exec frontend sh
-```
-- delete volumes, db container. all data will be deleted
-```bash
-docker compose down -v
-```
-- Pyhton virtual environment
-```bash
-cd backend
-source venv/bin/activate
-pip install -r requirements.txt
-```
+
+---
+
+## 📊 Database Schema (PostgreSQL + pgvector)
+
+The system relies on a robust **9-Table Relational Structure** designed for data integrity, AI compatibility, and comprehensive audit logging. All relationships utilize `CASCADE DELETE` to ensure that when a user is removed, all associated data (slides, notes, sessions, logs) is automatically wiped to prevent orphan data.
+
+| Table Name | Description | Key Technical Features |
+| :--- | :--- | :--- |
+| **`users`** | Central identity table. | Supports Age Analysis via `birth_date`. Primary root of all relations. |
+| **`user_preferences`** | User-specific settings. | 1:1 Relation. Stores `ideal_presentation_time` and `language`. |
+| **`presentations`** | Metadata for uploaded files. | Supports **Guest Mode** (`user_id` is nullable). Tracks file hashes for security. |
+| **`slides`** | The "Brain" of the RAG system. | Stores **Vector Embeddings (1536 dim)** for AI semantic search via **pgvector**. |
+| **`notes`** | User-specific slide notes. | Strictly for registered users (`user_id` NOT null). |
+| **`presentation_analyses`** | AI-generated report card. | **JSONB storage** for flexible AI metrics, feedback, and scoring. |
+| **`presentation_sessions`** | Performance logs. | Tracks practice vs live modes, duration, and real-time slide indices. |
+| **`activity_logs`** | System-wide audit trail. | Logs all user actions (upload, delete, login) for security and analytics. |
+| **`verification_tokens`** | Authentication security. | Time-limited tokens for email verification and secure password resets. |
+
+---
+
+<p align="center">
+  Developed with ❤️ for intelligent presentation management.
+</p>
